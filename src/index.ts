@@ -1,32 +1,20 @@
-import express from "express";
-import { graphqlHTTP } from "express-graphql";
-import { buildSchema } from "graphql";
+import dotenv from "dotenv";
 
-const schema = buildSchema(`
-    type Query {
-        hello: String
-    }
-`);
+dotenv.config();
 
-const rootValue = {
-  hello: () => {
-    return "Hello World";
-  },
-};
+import { App } from "./app";
 
-const app = express();
+async function startServer() {
+  try {
+    const app = await new App().setupApp();
+    const PORT = process.env.PORT || 4000;
+    app.listen(PORT, () => {
+      console.log(`🚀 App running on port: ${PORT}`);
+    });
+  } catch (err) {
+    console.warn(err);
+    process.exit(1);
+  }
+}
 
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema,
-    rootValue,
-    graphiql: true,
-  })
-);
-
-const PORT = process.env.PORT || 4000;
-
-app.listen(PORT, () =>
-  console.log(`🚀 Express/GraphQL listening on port ${PORT}`)
-);
+startServer();
