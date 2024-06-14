@@ -30,6 +30,8 @@ export class ClicksModels extends BaseModels {
 
   vendor: string;
 
+  customFields: string;
+
   constructor({
     browser,
     campaignId,
@@ -45,6 +47,7 @@ export class ClicksModels extends BaseModels {
     region,
     timezone,
     vendor,
+    customFields,
   }: Omit<ClicksModels, "_id" | "createdAt" | "updatedAt">) {
     super();
 
@@ -62,5 +65,6 @@ export class ClicksModels extends BaseModels {
     this.region = region;
     this.timezone = timezone;
     this.vendor = vendor;
+    this.customFields = customFields;
   }
 }
