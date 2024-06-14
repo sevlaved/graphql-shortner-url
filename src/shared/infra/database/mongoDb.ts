@@ -11,6 +11,8 @@ export class Mongodb {
 
       const client = new MongoClient(process.env.MONGODB_URL as string);
 
+      console.log(process.env.MONGODB_DATABASE);
+
       instanceDb = client.db(process.env.MONGODB_DATABASE);
 
       return instanceDb;
