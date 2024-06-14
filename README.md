@@ -6,13 +6,9 @@ Encurtador de URL.
 
 Este projeto possui três tipos de ambiente:
 
-### Review
-
-Todo Pull Request aberto ganha uma nova URL que dura 1 dia para revisão.
-
-### Staging
-
-Ambiente de stage para testes.
+1. Review
+2. Staging
+3. Production
 
 ### Prod
 
