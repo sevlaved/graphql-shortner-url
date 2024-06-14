@@ -14,5 +14,6 @@ export const schema = buildSchema(`
   type Mutation {
     signUp(email: String!, password: String!): Boolean
     signIn(email: String!, password: String!): User
+    createCampaign(url: String!, name: String!): String
   }
 `);

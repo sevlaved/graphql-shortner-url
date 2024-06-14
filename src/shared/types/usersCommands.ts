@@ -1,12 +1,5 @@
-export type ISignUpUserRequestProps = {
-  email: string;
-  password: string;
-};
-
-export type ISignInUserRequestProps = {
-  email: string;
-  password: string;
-};
+import { z } from "zod";
+import { signInInput, signUpInput } from "../../modules/users/utils";
 
 export type ISIgnInUserResponseProps = {
   email: string;
@@ -14,6 +7,8 @@ export type ISIgnInUserResponseProps = {
   token: string;
 };
 export interface IUsersCommands {
-  signUp(payload: ISignUpUserRequestProps): Promise<void>;
-  signIn(payload: ISignInUserRequestProps): Promise<ISIgnInUserResponseProps>;
+  signUp(payload: z.infer<typeof signUpInput>): Promise<void>;
+  signIn(
+    payload: z.infer<typeof signInInput>
+  ): Promise<ISIgnInUserResponseProps>;
 }
