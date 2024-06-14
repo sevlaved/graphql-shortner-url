@@ -25,6 +25,8 @@ export class CampaignsCommands implements ICampaignsCommands {
     url,
   }: z.infer<typeof createCampaignInput>): Promise<string> {
     try {
+      createCampaignInput.parse({ token, name, url });
+
       const userId = this.hashProvider.decode({
         jwt: token,
       });
@@ -54,7 +56,7 @@ export class CampaignsCommands implements ICampaignsCommands {
 
       await this.campaignsRepositories.create(campaign);
 
-      return `https://google.com/${tracker}`;
+      return `${process.env.BASE_URL}/${tracker}`;
     } catch (error) {
       console.warn(error);
       throw error;
