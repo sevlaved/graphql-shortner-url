@@ -1,10 +1,9 @@
 import express, { Application } from "express";
-import { Db } from "mongodb";
 import dotenv from "dotenv";
-import { Mongodb } from "./shared/infra/database/mongoDb";
 import { graphqlHTTP } from "express-graphql";
 import { schema } from "./graphql/schema";
 import { resolvers } from "./graphql/resolvers";
+import { Mongodb } from "./shared/infra/database/mongoDb";
 
 dotenv.config();
 
@@ -13,11 +12,6 @@ export class App {
 
   constructor() {
     this.app = express();
-  }
-
-  async database(): Promise<Db> {
-    const db = await Mongodb.getDb();
-    return db;
   }
 
   middlewares(): void {
@@ -32,7 +26,7 @@ export class App {
   }
 
   async setupApp(): Promise<Application> {
-    await this.database();
+    await Mongodb.getDb();
     this.middlewares();
     return this.app;
   }
