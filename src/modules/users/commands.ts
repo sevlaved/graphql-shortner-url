@@ -1,8 +1,6 @@
 import { Db } from "mongodb";
 import {
   ISIgnInUserResponseProps,
-  ISignInUserRequestProps,
-  ISignUpUserRequestProps,
   IUsersCommands,
 } from "../../shared/types/usersCommands";
 
@@ -11,6 +9,8 @@ import { UsersRepositories } from "./repositories";
 import { UsersModels } from "./models";
 import { IHashProvider } from "../../shared/types/hashProvider";
 import { HashProvider } from "../../shared/providers/hashProvider";
+import { z } from "zod";
+import { signInInput, signUpInput } from "./utils";
 
 export class UsersCommands implements IUsersCommands {
   private usersRepositories: IUsersRepositories;
@@ -23,11 +23,12 @@ export class UsersCommands implements IUsersCommands {
     this.hashProvider = new HashProvider();
   }
 
-  async signUp({ email, password }: ISignUpUserRequestProps): Promise<void> {
+  async signUp({
+    email,
+    password,
+  }: z.infer<typeof signUpInput>): Promise<void> {
     try {
-      if (!email || !password) {
-        throw new Error("email and password must be provided");
-      }
+      signUpInput.parse({ email, password });
 
       const checkIfUserAlreadyRegistered =
         await this.usersRepositories.findUserByEmail({
@@ -57,11 +58,9 @@ export class UsersCommands implements IUsersCommands {
   async signIn({
     email,
     password,
-  }: ISignInUserRequestProps): Promise<ISIgnInUserResponseProps> {
+  }: z.infer<typeof signInInput>): Promise<ISIgnInUserResponseProps> {
     try {
-      if (!email || !password) {
-        throw new Error("email and password must be provided");
-      }
+      signInInput.parse({ email, password });
 
       const getUser = await this.usersRepositories.findUserByEmail({
         email,
