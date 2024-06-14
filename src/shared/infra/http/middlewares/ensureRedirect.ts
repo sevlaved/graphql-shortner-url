@@ -15,8 +15,14 @@ export const ensureRedirect = async (
     (req.headers["x-forwarded-for"] as string) ||
     (req.connection.remoteAddress as string);
   const { tracker } = req.params;
+  const customFields = req.query;
 
-  const result = await command.redirect({ tracker, ua, ip });
+  const result = await command.redirect({
+    tracker,
+    ua,
+    ip,
+    customFields: !!customFields ? JSON.stringify(customFields) : "",
+  });
 
   return res.redirect(result);
 };
