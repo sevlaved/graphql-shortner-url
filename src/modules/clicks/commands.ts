@@ -32,6 +32,7 @@ export class ClicksCommands implements IClicksCommands {
     tracker,
     ua,
     ip,
+    customFields,
   }: z.infer<typeof redirectClickInput>): Promise<string> {
     const getPayloadClick = async () => {
       try {
@@ -45,7 +46,7 @@ export class ClicksCommands implements IClicksCommands {
     };
 
     try {
-      redirectClickInput.parse({ tracker, ip, ua });
+      redirectClickInput.parse({ tracker, ip, ua, customFields });
 
       const campaign = await this.campaignsRepositories.findByTracker({
         tracker,
@@ -54,8 +55,6 @@ export class ClicksCommands implements IClicksCommands {
           _id: 1,
         },
       });
-
-      console.log({ campaign, tracker });
 
       if (!campaign) {
         throw new Error("campaign not found");
@@ -66,6 +65,7 @@ export class ClicksCommands implements IClicksCommands {
           const click = new ClicksModels({
             ...result,
             campaignId: campaign._id,
+            customFields,
           });
 
           console.log("created sem erro");
@@ -88,6 +88,7 @@ export class ClicksCommands implements IClicksCommands {
             region: "",
             timezone: "",
             vendor: "",
+            customFields,
           });
 
           console.log("created com erro");
