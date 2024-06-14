@@ -1,6 +1,6 @@
 # Nome do Projeto
 
-Descrição curta do projeto.
+Encurtador de URL.
 
 ## Ambientes
 
