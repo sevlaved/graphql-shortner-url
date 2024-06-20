@@ -1,4 +1,4 @@
-import { Db, ObjectId } from "mongodb";
+import { Db } from "mongodb";
 import { ICampaignsRepositories } from "../../shared/types/campaignsRepositories";
 import { IClicksCommands } from "../../shared/types/clicksCommands";
 import { IClicksRepositories } from "../../shared/types/clicksRepositories";
@@ -24,6 +24,7 @@ export class ClicksCommands implements IClicksCommands {
   constructor(db: Db) {
     this.clicksRepositories = new ClicksRepositories(db);
     this.campaignsRepositories = new CampaignsRepositories(db);
+
     this.userAgentProvider = new UserAgentProvider();
     this.IpProvider = new IpProvider();
   }
@@ -39,7 +40,17 @@ export class ClicksCommands implements IClicksCommands {
         const payloadUa = this.userAgentProvider.getResult({ ua });
         const payloadIp = await this.IpProvider.getIpInfo({ ip });
 
-        return { ...payloadIp, ...payloadUa };
+        let device = "";
+
+        if (/Mobile/i.test(ua)) {
+          device = "mobile";
+        } else if (/Tablet/i.test(ua)) {
+          device = "tablet";
+        } else {
+          device = "desktop";
+        }
+
+        return { ...payloadIp, ...payloadUa, deviceType: device };
       } catch (error) {
         throw error;
       }
@@ -68,8 +79,6 @@ export class ClicksCommands implements IClicksCommands {
             customFields,
           });
 
-          console.log("created sem erro");
-
           this.clicksRepositories.create(click);
         })
         .catch(() => {
@@ -91,8 +100,6 @@ export class ClicksCommands implements IClicksCommands {
             customFields,
           });
 
-          console.log("created com erro");
-
           this.clicksRepositories.create(click);
         });
 
@@ -100,7 +107,6 @@ export class ClicksCommands implements IClicksCommands {
       return campaign.url;
     } catch (error) {
       console.warn(error);
-      //fallback
       return "https://google.com";
     }
   }
